@@ -1,5 +1,5 @@
 @extends('layouts/layout')
-@section('title', 'Page Title')
+@section('title', 'HelloWorld!!')
 
 @section('sidebar')
 

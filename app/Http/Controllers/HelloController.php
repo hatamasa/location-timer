@@ -10,6 +10,6 @@ class HelloController extends Controller
     {
         $text = 'Hello World!!';
 
-        return view('hello', ['text' => $text]);
+        return view('hello/hello', ['text' => $text]);
     }
 }

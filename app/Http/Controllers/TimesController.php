@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class TimeController extends Controller
+class TimesController extends Controller
 {
     // TODO timezoneはindexでDBから取得
     private $timezone_list = [

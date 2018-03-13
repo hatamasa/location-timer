@@ -13,7 +13,7 @@ class CreateTimesTable extends Migration
      */
     public function up()
     {
-        Schema::create('time', function (Blueprint $table) {
+        Schema::create('times', function (Blueprint $table) {
             $table->increments('id');
             $table->text('country_name');
             $table->text('utc_diff');
@@ -29,6 +29,6 @@ class CreateTimesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('time');
+        Schema::dropIfExists('times');
     }
 }

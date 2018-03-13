@@ -13,10 +13,18 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('hello', 'HelloController@index');
 
-Route::get('/hello/', 'HelloController@index');
+Route::get('/', 'TimesController@index');
 
-Route::get('/time/', 'TimeController@index');
+Route::get('create', 'TimesController@create');
+
+Route::post('create', 'TimesController@store');
+
+Route::get('edit/{id}', 'TimesController@edit');
+
+Route::post('edit', 'TimesController@update');
+
+Route::get('delete/{id}', 'TimesController@show');
+
+Route::post('delete', 'TimesController@delete');

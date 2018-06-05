@@ -1,3 +1,6 @@
+// DB作成
+CREATE DATABASE location_timer;
+
 INSERT INTO times(utc_diff, country_name, timezone) VALUES('UTC-12:00', '国際日付変更線 西側', 'Etc/GMT+12');
 INSERT INTO times(utc_diff, country_name, timezone) VALUES('UTC-11:00', '協定世界時-11', 'Etc/GMT+11');
 INSERT INTO times(utc_diff, country_name, timezone) VALUES('UTC-10:00', 'ハワイ', 'Pacific/Honolulu');

@@ -13,6 +13,10 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::get('/test/{any}', function () {
+    return view('test');
+})->where('any', '.*');
+
 Route::get('hello', 'HelloController@index');
 
 Route::get('/', 'TimesController@index');

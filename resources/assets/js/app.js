@@ -10,15 +10,16 @@ Vue.use(VueRouter);
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+//Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('navbar', require('./components/Layouts/Navbar.vue'));
 
 const routes = [
-    { path: '/test/index/', component: require('./components/Test/Index.vue') },
-    { path: '/test/hello/', component: require('./components/Test/Hello.vue') }
+    { path: '/', components: require('./components/Test/Index.vue')},
+    { path: '/hello', components: require('./components/Test/Hello.vue')}
 ];
 
 const router = new VueRouter({
+    mode: 'history',
     routes: routes
 });
 

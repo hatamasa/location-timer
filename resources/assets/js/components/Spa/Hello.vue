@@ -1,13 +1,13 @@
 <template>
   <div>
+    <input type="text" v-model="msg">
+    <button @click="clear()">clear</button>
     <p v-if="msg.length > 0">
       {{msg}}
     </p>
     <p v-else>
       ↓入力してください
     </p>
-    <input type="text" v-model="msg">
-    <button @click="clear()">clear</button>
   </div>
 </template>
 

@@ -10,6 +10,9 @@
     </script>
 </head>
 <body>
+    <div id="header">
+        <test-header></test-header>
+    </div>
     <div id="app">
         <p>
             <router-link to="/vue/spa/">index</router-link>
@@ -18,6 +21,9 @@
         <div class="container">
             <router-view></router-view>
         </div>
+    </div>
+    <div id="todo">
+        <todo></todo>
     </div>
 </body>
 <script src="{{ mix('js/app.js') }}"></script>

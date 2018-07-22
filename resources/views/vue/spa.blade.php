@@ -12,8 +12,8 @@
 <body>
     <div id="app">
         <p>
-            <router-link to="/">index</router-link>
-            <router-link to="/hello">hello</router-link>
+            <router-link to="/vue/spa/">index</router-link>
+            <router-link to="/vue/spa/hello">hello</router-link>
         </p>
         <div class="container">
             <router-view></router-view>

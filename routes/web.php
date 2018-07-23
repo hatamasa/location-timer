@@ -13,9 +13,16 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/vue/spa/{any}', function () {
-    return view('/vue/spa');
+Route::get('/vue/test', function () {
+    return view('/vue/test');
+});
+Route::get('/vue/test/{any}', function () {
+    return view('/vue/test');
 })->where('any', '.*');
+
+Route::get('/vue/todo', function () {
+    return view('/vue/todo');
+});
 
 Route::get('hello', 'HelloController@index');
 

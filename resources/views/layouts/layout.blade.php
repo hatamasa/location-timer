@@ -14,6 +14,12 @@
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script> -->
 <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script> -->
 <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous"> -->
+<meta name="csrf-token" context="{{ csrf_token() }}">
+<script>
+    window.Laravel = {};
+    window.Laravel.csrfToken = "{{ csrf_token() }}";
+</script>
+</head>
 </head>
 
 <body>
@@ -24,9 +30,11 @@
         <p>
             <a href="/" class="btn btn-primary">TOP</a>
             <a href="/create" class="btn btn-primary">add country</a>
+            <a href="/myList" class="btn btn-primary">My List</a>
         </p>
         <hr>
         @yield('content')
     </div>
 </body>
+<script src="{{ mix('js/app.js') }}"></script>
 </html>

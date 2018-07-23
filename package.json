@@ -22,6 +22,7 @@
         "vuedraggable": "^2.16.0"
     },
     "dependencies": {
+        "moment": "^2.22.2",
         "vue-loader": "^14",
         "vue-template-compiler": "^2.5.16"
     }

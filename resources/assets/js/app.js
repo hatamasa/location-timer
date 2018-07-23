@@ -10,9 +10,12 @@ Vue.use(VueRouter);
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-import TestHeader from './components/Test/TestHeader.vue';
+import MyList1 from './components/MyList1.vue';
+
 import Todo from './components/Todo.vue';
 Vue.component('draggable', require('vuedraggable'));
+
+import TestHeader from './components/Test/TestHeader.vue';
 
 const routes = [
     { path: '/vue/test/', components: require('./components/Test/Index.vue')},
@@ -28,10 +31,10 @@ const app = new Vue({
     router
 }).$mount('#app');
 
-const app2 = new Vue({
-    el: '#header',
+const myList = new Vue({
+    el: '#myList',
     components: {
-        TestHeader
+        MyList1
     }
 });
 
@@ -39,5 +42,12 @@ const todo = new Vue({
     el: '#todo',
     components: {
         Todo
+    }
+});
+
+const app2 = new Vue({
+    el: '#header',
+    components: {
+        TestHeader
     }
 });

@@ -39,3 +39,7 @@ Route::post('edit', 'TimesController@update');
 Route::get('delete/{id}', 'TimesController@show');
 
 Route::post('delete', 'TimesController@delete');
+
+Route::get('myList', function () {
+    return view('/time/my_list');
+});

@@ -71,14 +71,17 @@ class TimesController extends Controller
         return view('time.update');
     }
 
-    public function show(Request $request, $id) {
-        $time = Time::find($id);
-        return view('time.show', ['time' => $time]);
-    }
-
     public function delete(Request $request) {
         Time::destroy($request->id);
         return view('time.delete');
+    }
+
+    public function getCountryList() {
+        return Time::orderBy('id', 'asc')->get();
+    }
+
+    public function getCountryById($id) {
+        return Time::find($id);
     }
 
 }

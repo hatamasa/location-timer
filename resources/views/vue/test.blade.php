@@ -1,4 +1,4 @@
-@extends('layouts/layout-vue')
+@extends('vue/layouts/layout')
 @section('title', 'test vue')
 
 @section('content')

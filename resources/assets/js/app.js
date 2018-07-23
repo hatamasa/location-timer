@@ -12,6 +12,7 @@ Vue.use(VueRouter);
  */
 import TestHeader from './components/Test/TestHeader.vue';
 import Todo from './components/Todo.vue';
+Vue.component('draggable', require('vuedraggable'));
 
 const routes = [
     { path: '/vue/test/', components: require('./components/Test/Index.vue')},

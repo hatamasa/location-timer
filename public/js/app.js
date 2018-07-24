@@ -29524,6 +29524,50 @@ module.exports = Cancel;
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -29531,8 +29575,13 @@ module.exports = Cancel;
         return {
             selected: "",
             countries: [],
-            japan: [],
-            myList1: []
+            myList1: [],
+            addHour: 0
+            /* timeClass {
+                isMorning: false,
+                isDay: false,
+                isNight: false,
+            } */
         };
     },
 
@@ -29550,67 +29599,64 @@ module.exports = Cancel;
             }).then(function (res) {
                 _this.countries = res.data;
             });
-            // 日本を取得
-            this.$http({
-                url: '/api/country/81',
-                method: 'GET'
-            }).then(function (res) {
-                _this.japan.push({
-                    id: res.data['id'],
-                    country_name: res.data['country_name'],
-                    utc_diff: res.data['utc_diff'],
-                    timezone: res.data['timezone']
-                });
-            });
         },
         loadMyList1: function loadMyList1() {
+            var _this2 = this;
+
             this.myList1 = JSON.parse(localStorage.getItem('myList1'));
-            if (!this.myList1) {
-                this.myList1 = [];
+            if (this.myList1.length == 0) {
+                // 日本を取得
+                this.$http({
+                    url: '/api/country/81',
+                    method: 'GET'
+                }).then(function (res) {
+                    _this2.myList1.push({
+                        id: res.data['id'],
+                        country_name: res.data['country_name'],
+                        utc_diff: res.data['utc_diff']
+                    });
+                });
             }
         },
         addCountry: function addCountry() {
-            var _this2 = this;
+            var _this3 = this;
 
             if (!this.selected) return;
             this.$http({
                 url: '/api/country/' + this.selected,
                 method: 'GET'
             }).then(function (res) {
-                _this2.myList1.push({
+                _this3.myList1.push({
                     id: res.data['id'],
                     country_name: res.data['country_name'],
-                    utc_diff: res.data['utc_diff'],
-                    timezone: res.data['timezone']
+                    utc_diff: res.data['utc_diff']
                 });
-                _this2.saveMyList1();
+                _this3.saveMyList1();
             });
         },
         saveMyList1: function saveMyList1() {
             localStorage.setItem('myList1', JSON.stringify(this.myList1));
         },
         deleteCountry: function deleteCountry(id) {
-            var _this3 = this;
+            var _this4 = this;
 
             this.myList1.some(function (val, idx) {
                 if (val.id == id) {
-                    _this3.myList1.splice(idx, 1);
+                    _this4.myList1.splice(idx, 1);
                 }
             });
             this.saveMyList1();
-        }
-    },
-    filters: {
-        calculateTime: function calculateTime(date) {
+        },
+        getTimeFromDiff: function getTimeFromDiff(diff) {
             var dt = new Date();
             var offset = dt.getTimezoneOffset() / 60;
             var hours = dt.getHours();
             // UTC標準時間に設定
             dt.setHours(hours + offset);
 
-            var sign = date.substr(3, 1);
-            var hour_diff = date.substr(4, 2);
-            var minutes_diff = date.substr(7, 2);
+            var sign = diff.substr(3, 1);
+            var hour_diff = diff.substr(4, 2);
+            var minutes_diff = diff.substr(7, 2);
             if (sign == "+") {
                 var now = dt.getTime() + (parseInt(hour_diff) * 60 + parseInt(minutes_diff)) * 60000;
             } else if (sign == "-") {
@@ -29622,6 +29668,61 @@ module.exports = Cancel;
             var hour = ('00' + jikan.getHours()).slice(-2);
             var minutes = ('00' + jikan.getMinutes()).slice(-2);
             return month + '/' + day + ' ' + hour + ':' + minutes;
+        }
+    },
+    filters: {
+        getTimeFromDiff: function getTimeFromDiff(diff, min_flg) {
+            var dt = new Date();
+            var offset = dt.getTimezoneOffset() / 60;
+            var hours = dt.getHours();
+            // UTC標準時間に設定
+            dt.setHours(hours + offset);
+
+            var sign = diff.substr(3, 1);
+            var hour_diff = diff.substr(4, 2);
+            var minutes_diff = diff.substr(7, 2);
+            if (sign == "+") {
+                var now = dt.getTime() + (parseInt(hour_diff) * 60 + parseInt(minutes_diff)) * 60000;
+            } else if (sign == "-") {
+                var now = dt.getTime() - (parseInt(hour_diff) * 60 + parseInt(minutes_diff)) * 60000;
+            }
+            var jikan = new Date(now);
+            var month = ('00' + (jikan.getMonth() + 1)).slice(-2);
+            var day = ('00' + jikan.getDate()).slice(-2);
+            var hour = ('00' + jikan.getHours()).slice(-2);
+            var minutes = ('00' + jikan.getMinutes()).slice(-2);
+            if (min_flg) {
+                return month + '/' + day + ' ' + hour + ':' + minutes;
+            } else {
+                return month + '/' + day + ' ' + hour + ':' + minutes_diff;
+            }
+        },
+        calcTime: function calcTime(time, n, addHour) {
+            var dt = new Date();
+            var newDate = new Date(dt.getFullYear(), time.substr(0, 2), time.substr(3, 2), time.substr(6, 2), time.substr(9, 2));
+            newDate.setHours(newDate.getHours() + (n - 1 + addHour));
+            var month = ('00' + newDate.getMonth()).slice(-2);
+            var day = ('00' + newDate.getDate()).slice(-2);
+            var hour = ('00' + newDate.getHours()).slice(-2);
+            var minutes = ('00' + newDate.getMinutes()).slice(-2);
+            if (minutes != '00') {
+                return month + '/' + day + ' ' + hour + ':' + minutes;
+            } else {
+                return month + '/' + day + ' ' + hour;
+            }
+        },
+        getTimeClass: function getTimeClass(time) {
+            var hour = parseInt(time.substr(6, 2));
+            switch (true) {
+                case hour >= 6 && hour <= 8:
+                    return "morning";
+                case hour >= 9 && hour <= 18:
+                    return "day";
+                case hour >= 19 && hour <= 24:
+                    return "night";
+                case hour >= 0 && hour <= 5:
+                    return "mid-night";
+            }
         }
     }
 });
@@ -66653,6 +66754,10 @@ module.exports = function spread(callback) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_494251a0_hasScoped_false_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_MyList1_vue__ = __webpack_require__(171);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_component_normalizer__ = __webpack_require__(3);
 var disposed = false
+function injectStyle (context) {
+  if (disposed) return
+  __webpack_require__(191)
+}
 /* script */
 
 
@@ -66661,7 +66766,7 @@ var disposed = false
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = null
+var __vue_styles__ = injectStyle
 /* scopeId */
 var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
@@ -67026,43 +67131,102 @@ var render = function() {
       [_vm._v("MyListに追加")]
     ),
     _vm._v(" "),
-    _c("table", { staticClass: "table table-bordered" }, [
-      _vm._m(0),
-      _vm._v(" "),
-      _c(
-        "tbody",
-        [
-          _vm._l(_vm.japan, function(row) {
-            return _c("tr", [
-              _c("td", { attrs: { scope: "row" } }, [_vm._v(_vm._s(row.id))]),
-              _vm._v(" "),
-              _c("td", { attrs: { scope: "row" } }, [
-                _vm._v(_vm._s(row.country_name))
-              ]),
-              _vm._v(" "),
-              _c("td", { attrs: { scope: "row" } }, [
-                _vm._v(_vm._s(row.timezone))
-              ]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(_vm._f("calculateTime")(row.utc_diff)))]),
-              _vm._v(" "),
-              _c("td")
-            ])
-          }),
-          _vm._v(" "),
+    _c("div", { staticClass: "table-area" }, [
+      _c("table", { staticClass: "table table-bordered" }, [
+        _c("thead", [
+          _c("tr", [
+            _c("th", { attrs: { scope: "col" } }, [_vm._v("country_name")]),
+            _vm._v(" "),
+            _c("th", { attrs: { scope: "col" } }, [_vm._v("time")]),
+            _vm._v(" "),
+            _c(
+              "th",
+              { staticClass: "time-bar-header", attrs: { scope: "col" } },
+              [
+                _c(
+                  "a",
+                  {
+                    attrs: { href: "javascript:void(0)" },
+                    on: {
+                      click: function($event) {
+                        _vm.addHour -= 1
+                      }
+                    }
+                  },
+                  [_vm._v("< defore")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  { attrs: { href: "javascript:window.location.reload();" } },
+                  [_vm._v("now")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  {
+                    attrs: { href: "javascript:void(0)" },
+                    on: {
+                      click: function($event) {
+                        _vm.addHour += 1
+                      }
+                    }
+                  },
+                  [_vm._v("after >")]
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c("th", { attrs: { scope: "col" } })
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "tbody",
           _vm._l(_vm.myList1, function(row) {
             return _c("tr", [
-              _c("td", { attrs: { scope: "row" } }, [_vm._v(_vm._s(row.id))]),
-              _vm._v(" "),
               _c("td", { attrs: { scope: "row" } }, [
                 _vm._v(_vm._s(row.country_name))
               ]),
               _vm._v(" "),
-              _c("td", { attrs: { scope: "row" } }, [
-                _vm._v(_vm._s(row.timezone))
+              _c("td", [
+                _vm._v(_vm._s(_vm._f("getTimeFromDiff")(row.utc_diff, 1)))
               ]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(_vm._f("calculateTime")(row.utc_diff)))]),
+              _c("td", { staticClass: "time-bar", attrs: { scope: "row" } }, [
+                _c(
+                  "div",
+                  { staticClass: "bar-inline" },
+                  _vm._l(24, function(n) {
+                    return _c(
+                      "div",
+                      {
+                        staticClass: "timeCol",
+                        class: _vm._f("getTimeClass")(
+                          _vm._f("calcTime")(
+                            _vm._f("getTimeFromDiff")(row.utc_diff),
+                            n,
+                            _vm.addHour
+                          )
+                        )
+                      },
+                      [
+                        _vm._v(
+                          "\n                                " +
+                            _vm._s(
+                              _vm._f("calcTime")(
+                                _vm._f("getTimeFromDiff")(row.utc_diff),
+                                n,
+                                _vm.addHour
+                              )
+                            ) +
+                            "\n                            "
+                        )
+                      ]
+                    )
+                  })
+                )
+              ]),
               _vm._v(" "),
               _c("td", [
                 _c(
@@ -67080,32 +67244,12 @@ var render = function() {
               ])
             ])
           })
-        ],
-        2
-      )
+        )
+      ])
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("country_name")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("timezone")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("time")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } })
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 if (false) {
@@ -69960,6 +70104,50 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 188 */,
+/* 189 */,
+/* 190 */,
+/* 191 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(192);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var add = __webpack_require__(176).default
+var update = add("a89551b0", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"scoped\":false,\"sourceMap\":false}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MyList1.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"scoped\":false,\"sourceMap\":false}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MyList1.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 192 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(175)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.table-area {\n  width: 100%;\n  overflow-x: scroll;\n  border: solid 1px #ccc;\n}\n.table-area table {\n  font-size: 11px;\n  margin-bottom: 0;\n}\n.time-bar-header {\n  text-align: center;\n}\n.time-bar-header a {\n  margin: 20px;\n}\n.time-bar {\n  display: table-cell;\n  text-align: center;\n}\n.time-bar div.bar-inline {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n}\n.bar-inline div {\n  border: solid 1px #ccc;\n  padding: 0px 1px 0px 1px;\n}\n.morning {\n  background-color: #fcf8e3;\n}\n.day {\n  background-color: #f2dede\n}\n.night {\n  background-color: #eee;\n}\n.mid-night {\n  background-color: #ccc;\n}\n", ""]);
+
+// exports
+
 
 /***/ })
 /******/ ]);

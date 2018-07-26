@@ -1,4 +1,5 @@
 <?php
+$db = parse_url(env('DATABASE_URL'));
 
 return [
 
@@ -34,16 +35,20 @@ return [
     'connections' => [
 
         'pgsql' => [
-            'driver' => 'pgsql',
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
-            'charset' => 'utf8',
-            'prefix' => '',
+            'className' => 'Cake\Database\Connection',
+            'driver' => 'Cake\Database\Driver\Postgres',
+            'persistent' => 'false',
+            'host' => $db['host'],
+            'port' => '5432',
+            'username' => $db['user'],
+            'password' => $db['pass'],
+            'database' => substr($db['path'], 1),
             'schema' => 'public',
-            'sslmode' => 'prefer',
+            'prefix' => '',
+            'encoding' => 'utf8',
+            'timezone' => 'UTC',
+            'cacheMetadata' => true,
+            'log' => false,
         ],
     ],
 

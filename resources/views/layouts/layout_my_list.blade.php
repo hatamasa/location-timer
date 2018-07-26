@@ -20,12 +20,6 @@
     @include('layouts/common-header')
     @section('sidebar')
     <div class="container">
-    <h1>Menu</h1>
-        <p>
-            <a href="/" class="btn btn-primary">TOP</a>
-            <a href="/create" class="btn btn-primary">add country</a>
-        </p>
-        <hr>
         @yield('content')
     </div>
 </body>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>My List1</h1>
+        <h1>Location MyList</h1>
         <select v-model="selected">
             <option v-for="country in countries" v-bind:value="country.id">
                 {{ country.country_name }}
@@ -11,19 +11,22 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th scope="col">country_name</th>
-                        <th scope="col">time</th>
+                        <th scope="col" class="country_name">country_name</th>
+                        <th scope="col" class="time">time</th>
                         <th scope="col" class="time-bar-header">
-                            <a href="javascript:void(0)" v-on:click="addHour -= 1">< defore</a>
+                            <div v-for="n in 24" class="forcus" @mouseover="forcusTime" @mouseleave="forcusOutTime"></div>
+                            <el-date-picker v-model="date" type="date" placeholder="change date..." @change="changeDate()"></el-date-picker>
+                            <a href="javascript:void(0)" @click="addHour -= 1">< defore</a>
                             <a href="javascript:window.location.reload();">now</a>
-                            <a href="javascript:void(0)" v-on:click="addHour += 1">after ></a>
+                            <a href="javascript:void(0)" @click="addHour += 1">after ></a>
                         </th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr v-for="row in myList1">
-                        <td scope="row">{{ row.country_name }}</td>
+                <draggable :element="'tbody'" v-model="myList"
+                    v-bind:options="{ animation: 200, delay: 50, handle:'.handle' }" @end="onEnd">
+                    <tr v-for="row in myList">
+                        <td scope="row" class="handle">{{ row.country_name }}</td>
                         <td>{{ row.utc_diff | getTimeFromDiff(1) }}</td>
                         <td scope="row" class="time-bar">
                             <div class="bar-inline">
@@ -32,9 +35,9 @@
                                 </div>
                             </div>
                         </td>
-                        <td><button type="button" v-on:click="deleteCountry(row.id)">削除</button></td>
+                        <td><button type="button" @click="deleteCountry(row.id)" class="deleteCountry">削除</button></td>
                     </tr>
-                </tbody>
+                </draggable>
             </table>
         </div>
     </div>
@@ -50,6 +53,15 @@
     font-size: 11px;
     margin-bottom: 0;
   }
+  .country_name {
+    min-width: 200px;
+    max-width: 200px;
+    width: 200px;
+  }
+  .time {
+    min-width: 46px;
+    width: 46px;
+  }
   .time-bar-header {
     text-align: center;
   }
@@ -64,8 +76,10 @@
     display: flex;
   }
   .bar-inline div {
+    width: 33px;
     border: solid 1px #ccc;
     padding: 0px 1px 0px 1px;
+    border-radius: 5px;
   }
   .morning {
     background-color: #fcf8e3;
@@ -76,8 +90,21 @@
   .night {
     background-color: #eee;
   }
+  .twelve-mid-night {
+    border-left: solid 3px #409eff !important;
+  }
   .mid-night {
     background-color: #ccc;
+  }
+  .handle {
+    cursor: pointer;
+  }
+  .handle:hover {
+    border: solid 2px #bbb;
+  }
+  .forcus {
+    position: absolute;
+    width: 33.5px;
   }
 </style>
 
@@ -88,20 +115,24 @@ export default {
         return {
             selected: "",
             countries: [],
-            myList1: [],
+            myList: [],
+            date: "",
             addHour: 0,
-            /* timeClass {
-                isMorning: false,
-                isDay: false,
-                isNight: false,
-            } */
         }
     },
-    mounted: function() {
+    mounted: function () {
+        this.initData();
         this.fetchCountry();
-        this.loadMyList1();
+        this.loadMyList();
+    },
+    updated: function () {
+        this.changeForcusHeight();
+        this.changeForcusOffset();
     },
     methods: {
+        initData () {
+            this.date = new Date();
+        },
         fetchCountry () {
             this.$http({
                 url: '/api/country',
@@ -110,15 +141,16 @@ export default {
                 this.countries = res.data
             });
         },
-        loadMyList1 () {
-            this.myList1 = JSON.parse(localStorage.getItem('myList1'));
-            if (this.myList1.length == 0) {
+        loadMyList () {
+            this.myList = JSON.parse(localStorage.getItem('myList'));
+            if (! this.myList) {
+                this.myList = [];
                 // 日本を取得
                 this.$http({
                     url: '/api/country/81',
                     method: 'GET'
                 }).then(res => {
-                    this.myList1.push({
+                    this.myList.push({
                         id: res.data['id'],
                         country_name: res.data['country_name'],
                         utc_diff: res.data['utc_diff'],
@@ -132,24 +164,34 @@ export default {
                 url: '/api/country/'+this.selected,
                 method: 'GET'
             }).then(res => {
-                this.myList1.push({
+                this.myList.push({
                     id: res.data['id'],
                     country_name: res.data['country_name'],
                     utc_diff: res.data['utc_diff'],
                 });
-                this.saveMyList1();
+                this.saveMyList();
             })
+            this.changeForcusHeight();
         },
-        saveMyList1 () {
-            localStorage.setItem('myList1', JSON.stringify(this.myList1));
+        changeDate () {
+            var date1 = new Date();
+            var date2 = new Date(this.date);
+            var ms_diff = date2.getTime() - date1.getTime();
+            var days_diff = Math.floor(ms_diff / (1000 * 60 * 60 *24));
+            this.addHour = (days_diff + 1) * 24;
+        },
+        saveMyList () {
+            localStorage.setItem('myList', JSON.stringify(this.myList));
         },
         deleteCountry (id) {
-            this.myList1.some((val, idx) => {
+            this.myList.some((val, idx) => {
                 if (val.id == id) {
-                    this.myList1.splice(idx, 1);
+                    this.myList.splice(idx, 1);
                 }
             });
-            this.saveMyList1();
+            this.saveMyList();
+            // フォーカスの高さを変更
+            this.changeForcusHeight();
         },
         getTimeFromDiff (diff) {
             var dt = new Date();
@@ -173,6 +215,31 @@ export default {
             var minutes = ('00' + jikan.getMinutes()).slice(-2);
             return month+'/'+day+' '+hour+':'+minutes;
         },
+        onEnd () {
+            this.saveMyList();
+        },
+        forcusTime (event) {
+            event.target.style.border = "solid 2px #409eff";
+        },
+        forcusOutTime (event) {
+            event.target.style.border = "none";
+        },
+        changeForcusHeight () {
+            var header_height = $(".time-bar-header").outerHeight();
+            var table_height = $(".table").innerHeight();
+            $(".forcus").css("height", table_height - header_height);
+        },
+        changeForcusOffset () {
+            var header_height = $(".time-bar-header").outerHeight();
+            var col_width = $(".timeCol").outerWidth();
+            if (! $(".time-bar").length) return;
+            var time_bar_padding_left = parseInt($(".time-bar").css("padding-left").replace("px", ""));
+            var offset = $(".time-bar-header").offset();
+            $(".forcus").each((idx, elem) => {
+                elem.style.top = offset["top"] + header_height + "px";
+                elem.style.left = offset["left"] + time_bar_padding_left + (parseInt(idx) * col_width) + "px";
+            });
+        }
     },
     filters: {
         getTimeFromDiff (diff, min_flg) {
@@ -196,8 +263,10 @@ export default {
             var hour = ('00' + jikan.getHours()).slice(-2);
             var minutes = ('00' + jikan.getMinutes()).slice(-2);
             if (min_flg) {
+                // min_flgがある時は現在時刻を返却する
                 return month+'/'+day+' '+hour+':'+minutes;
             } else {
+                // min_flgがない時はUTC時差から分を連結する
                 return month+'/'+day+' '+hour+':'+minutes_diff;
             }
         },
@@ -209,10 +278,12 @@ export default {
             var day = ('00' + newDate.getDate()).slice(-2);
             var hour = ('00' + newDate.getHours()).slice(-2);
             var minutes = ('00' + newDate.getMinutes()).slice(-2);
-            if (minutes != '00') {
-                return month+'/'+day+' '+hour+':'+minutes;
-            } else {
+            if (minutes == '00') {
+                // 分が00の場合は分表示なし
                 return month+'/'+day+' '+hour;
+            } else {
+                // 分が00以外の場合は分を表示
+                return month+'/'+day+' '+hour+':'+minutes;
             }
         },
         getTimeClass (time) {
@@ -224,7 +295,9 @@ export default {
                     return "day";
                 case (hour >= 19 && hour <= 24):
                     return "night";
-                case (hour >= 0 && hour <= 5):
+                case hour == 0:
+                    return "mid-night twelve-mid-night";
+                case (hour >= 1 && hour <= 5):
                     return "mid-night";
             }
         },

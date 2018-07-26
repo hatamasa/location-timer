@@ -1,4 +1,4 @@
-@extends('layouts/layout')
+@extends('layouts/layout_my_list')
 @section('title', 'location-timer')
 
 @section('sidebar')

@@ -24,21 +24,25 @@ Route::get('/vue/todo', function () {
     return view('/vue/todo');
 });
 
-Route::get('hello', 'HelloController@index');
+// Basic認証有り
+Route::group(['middleware' => 'auth.very_basic'], function () {
 
-Route::get('/', 'TimesController@index');
+    Route::get('hello', 'HelloController@index');
 
-Route::get('create', 'TimesController@create');
+    Route::get('/', 'TimesController@index');
 
-Route::post('create', 'TimesController@store');
+    Route::get('create', 'TimesController@create');
 
-Route::get('edit/{id}', 'TimesController@edit');
+    Route::post('create', 'TimesController@store');
 
-Route::post('edit', 'TimesController@update');
+    Route::get('edit/{id}', 'TimesController@edit');
 
-Route::get('delete/{id}', 'TimesController@show');
+    Route::post('edit', 'TimesController@update');
 
-Route::post('delete', 'TimesController@delete');
+    Route::get('delete/{id}', 'TimesController@show');
+
+    Route::post('delete', 'TimesController@delete');
+});
 
 Route::get('myList', function () {
     return view('/time/my_list');

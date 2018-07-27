@@ -1,8 +1,6 @@
 <?php
-use Illuminate\Support\Facades\Log;
-
 $db = parse_url(env('DATABASE_URL'));
-Log::debug('production config.');
+
 return [
 
     /*

@@ -37,20 +37,16 @@ return [
     'connections' => [
 
         'pgsql' => [
-            'className' => 'Cake\Database\Connection',
-            'driver' => 'Cake\Database\Driver\Postgres',
-            'persistent' => 'false',
+            'driver' => 'pgsql',
             'host' => $db['host'],
             'port' => '5432',
+            'database' => substr($db['path'], 1),
             'username' => $db['user'],
             'password' => $db['pass'],
-            'database' => substr($db['path'], 1),
-            'schema' => 'public',
+            'charset' => 'utf8',
             'prefix' => '',
-            'encoding' => 'utf8',
-            'timezone' => 'UTC',
-            'cacheMetadata' => true,
-            'log' => false,
+            'schema' => 'public',
+            'sslmode' => 'prefer',
         ],
     ],
 

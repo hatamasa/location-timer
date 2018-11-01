@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-class HelloController extends Controller
+class TestController extends Controller
 {
     public function index()
     {
@@ -13,6 +13,6 @@ class HelloController extends Controller
             ['id' => 4, 'title' => '情熱プログラマー'],
         ];
 
-        return view('hello/hello', ['data' => $data]);
+        return view('test/test', ['data' => $data]);
     }
 }

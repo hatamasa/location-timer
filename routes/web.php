@@ -13,37 +13,33 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/vue/test', function () {
-    return view('/vue/test');
+// location-timer
+Route::get('myList', function () {
+    return view('/time/my_list');
 });
-Route::get('/vue/test/{any}', function () {
-    return view('/vue/test');
-})->where('any', '.*');
-
+// todoリスト
 Route::get('/vue/todo', function () {
     return view('/vue/todo');
 });
 
 // Basic認証有り
 Route::group(['middleware' => 'auth.very_basic'], function () {
-
-    Route::get('hello', 'HelloController@index');
-
+    // admin画面
     Route::get('/', 'TimesController@index');
-
     Route::get('create', 'TimesController@create');
-
     Route::post('create', 'TimesController@store');
-
     Route::get('edit/{id}', 'TimesController@edit');
-
     Route::post('edit', 'TimesController@update');
-
     Route::get('delete/{id}', 'TimesController@show');
-
     Route::post('delete', 'TimesController@delete');
+    // test
+    Route::get('test', 'TestController@index');
+    // test vue
+    Route::get('/vue/test', function () {
+        return view('/vue/test');
+    });
+    Route::get('/vue/test/{any}', function () {
+        return view('/vue/test');
+    })->where('any', '.*');
 });
 
-Route::get('myList', function () {
-    return view('/time/my_list');
-});

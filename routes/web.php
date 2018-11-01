@@ -36,7 +36,7 @@ Route::group(['middleware' => 'auth.very_basic'], function () {
     Route::get('test', 'TestController@index');
     // test vue
     Route::get('/vue/test', function () {
-        return view('/vue/test');
+        return view('/vue/test/test');
     });
     Route::get('/vue/test/{any}', function () {
         return view('/vue/test');

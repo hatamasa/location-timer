@@ -8,13 +8,32 @@ jobs:
       - checkout # プロジェクトのディレクトリにあるコードをチェックアウトします
       - run: npm install
       - run: npm run dev
-  notice:
+      
+  deploy:
+    type: approval
+    requires:
+      - build
     machine: true
     steps:
-      - run: echo "build success!!"
+      - run:  wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+      - run:  bash .circleci/setup-heroku.sh
+      - add_ssh_keys:
+          fingerprints:
+          - "fe:49:16:7f:3e:33:f7:39:8a:51:5f:62:ed:47:a0:33"
+      - deploy:
+          name: heroku deploy
+          command: |
+              if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                  git push heroku master
+              fi 
       
 workflows:
-    build workflow:
+    build_and_deploy:
         jobs:
           - build
-          - notice
+          - deploy
+            requires:
+              - build
+            filters:
+              branches:
+                only: master

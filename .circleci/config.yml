@@ -6,6 +6,7 @@ jobs:
       - image: circleci/node:10.15.1 # プライマリコンテナです。このなかでジョブコマンドが実行されます
     steps:
       - checkout # プロジェクトのディレクトリにあるコードをチェックアウトします
+      - run: npm install
       - run: npm run dev
   notice:
     machine: true

@@ -8,11 +8,7 @@ jobs:
       - checkout # プロジェクトのディレクトリにあるコードをチェックアウトします
       - run: npm install
       - run: npm run dev
-      
   deploy:
-    type: approval
-    requires:
-      - build
     machine: true
     steps:
       - run:  wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
@@ -28,12 +24,17 @@ jobs:
               fi 
       
 workflows:
+    version: 2.1
     build_and_deploy:
         jobs:
           - build
-          - deploy
-            requires:
-              - build
-            filters:
-              branches:
-                only: master
+          - hold-deploy:
+              type: approval
+              requires:
+                - build
+          - deploy:
+              requires:
+                - hold-deploy
+              filters:
+                branches:
+                  only: master

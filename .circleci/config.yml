@@ -2,15 +2,19 @@ version: 2.1
 
 jobs:
   build:
-    docker: # Executor タイプです。他に machine、macOS という実行タイプを指定できます
-      - image: circleci/node:10.15.1 # プライマリコンテナです。このなかでジョブコマンドが実行されます
+    working_directory: ~/location-timer
+    docker:
+      - image: circleci/node:10.15.1
     steps:
-      - checkout # プロジェクトのディレクトリにあるコードをチェックアウトします
+      - checkout
       - run: npm install
       - run: npm run dev
   deploy:
-    machine: true
+    working_directory: ~/location-timer
+    docker:
+      - image: circleci/node:10.15.1
     steps:
+      - checkout
       - run:  wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
       - run:  bash .circleci/setup-heroku.sh
       - add_ssh_keys:

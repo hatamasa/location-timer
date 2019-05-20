@@ -53,11 +53,4 @@ const todo = new Vue({
     }
 });
 
-// TIG Web API
-const stockArea = new Vue({
-    el: '#stockAreaWap',
-    components: {
-        StockAreaComponent
-    }
-});
 

@@ -14,11 +14,11 @@
 use Illuminate\Support\Facades\Route;
 
 // location-timer
-Route::get('myList', function () {
+Route::get('/myList/', function () {
     return view('/time/my_list');
 });
 // todoリスト
-Route::get('/vue/todo', function () {
+Route::get('/vue/todo/', function () {
     return view('/vue/todo');
 });
 
@@ -26,20 +26,22 @@ Route::get('/vue/todo', function () {
 Route::group(['middleware' => 'auth.very_basic'], function () {
     // admin画面
     Route::get('/', 'TimesController@index');
-    Route::get('create', 'TimesController@create');
-    Route::post('create', 'TimesController@store');
-    Route::get('edit/{id}', 'TimesController@edit');
-    Route::post('edit', 'TimesController@update');
-    Route::get('delete/{id}', 'TimesController@show');
-    Route::post('delete', 'TimesController@delete');
-    // test
-    Route::get('test', 'TestController@index');
+    Route::get('/create/', 'TimesController@create');
+    Route::post('/create/', 'TimesController@store');
+    Route::get('/edit/{id}/', 'TimesController@edit');
+    Route::post('/edit/', 'TimesController@update');
+    Route::get('/delete/{id}/', 'TimesController@show');
+    Route::post('/delete/', 'TimesController@delete');
     // test vue
-    Route::get('/vue/test', function () {
-        return view('/vue/test');
+    Route::get('/vue/test/', function () {
+        return view('/vue/test/index');
     });
-    Route::get('/vue/test/{any}', function () {
-        return view('/vue/test');
+    // test router vue
+    Route::get('/vue/test_router_link/', function () {
+        return view('/vue/test/test_router_link');
+    });
+    Route::get('/vue/test_router_link/{any}/', function () {
+        return view('/vue/test/test_router_link');
     })->where('any', '.*');
 });
 

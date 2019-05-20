@@ -5,10 +5,10 @@
      */
     return [
         // Username
-        'user'              => env("USER"),
+        'user'              => 'user',
 
         // Password
-        'password'          => env("PASS"),
+        'password'          => 'password',
 
         // Environments where the middleware is active. Use "*" to protect all envs
         'envs'              => [

@@ -8,8 +8,8 @@
 </div>
 <div id="app">
     <p>
-        <router-link to="/vue/test/">index</router-link>
-        <router-link to="/vue/test/hello">hello</router-link>
+        <router-link to="/vue/test_router_link/">index</router-link>
+        <router-link to="/vue/test_router_link/hello">hello</router-link>
     </p>
     <router-view></router-view>
 </div>

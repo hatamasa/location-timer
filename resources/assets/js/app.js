@@ -3,7 +3,6 @@ import VueRouter from 'vue-router';
 import MyList1 from './components/MyList.vue';
 import Todo from './components/Todo.vue';
 import TestHeader from './components/Test/TestHeader.vue';
-import StockAreaComponent from './components/Test/StockAreaComponent.vue';
 //ElementUI
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';

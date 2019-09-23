@@ -134,10 +134,14 @@ export default {
             this.date = new Date();
         },
         fetchCountry () {
-            this.$http({
-                url: '/api/country',
-                method: 'GET'
-            }).then(res =>  {
+            let axiosPost = axios.create({
+                xsrfHeaderName: 'X-XSRF-Token',
+                withCredentials: true
+            });
+            axiosPost.post('/api/country',{
+
+            })
+            .then(res =>  {
                 this.countries = res.data
             });
         },

@@ -18989,10 +18989,11 @@ function applyToTag (styleElement, obj) {
         fetchCountry: function fetchCountry() {
             var _this = this;
 
-            this.$http({
-                url: '/api/country',
-                method: 'GET'
-            }).then(function (res) {
+            var axiosPost = axios.create({
+                xsrfHeaderName: 'X-XSRF-Token',
+                withCredentials: true
+            });
+            axiosPost.post('/api/country', {}).then(function (res) {
                 _this.countries = res.data;
             });
         },

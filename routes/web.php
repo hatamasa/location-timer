@@ -45,3 +45,7 @@ Route::group(['middleware' => 'auth.very_basic'], function () {
     })->where('any', '.*');
 });
 
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

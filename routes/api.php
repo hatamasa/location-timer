@@ -14,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 */
 Route::group(['middleware' => 'api'], function() {
     Route::get('test', 'TestApiController@index');
-    Route::get('country', 'TimesController@getCountryList');
+    Route::post('country', 'TimesController@getCountryList');
     Route::get('country/{id}', 'TimesController@getCountryById');
 });

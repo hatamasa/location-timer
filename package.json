@@ -23,7 +23,7 @@
         "vuedraggable": "^2.16.0"
     },
     "dependencies": {
-        "ajv": "^6.5.4",
+        "ajv": "^6.12.3",
         "element-ui": "^2.4.9",
         "moment": "^2.22.2",
         "vue-loader": "^14",
